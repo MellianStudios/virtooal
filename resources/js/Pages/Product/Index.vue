@@ -38,7 +38,7 @@
                                         {{ product.DESCRIPTION }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <a :href="product.URL" class="text-blue-500">click me</a>
+                                        <a :href="product.URL" target="_blank" class="text-blue-500">click me</a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <img :src="product.IMGURL" class="w-24 h-auto" :alt="product.PRODUCTNAME">

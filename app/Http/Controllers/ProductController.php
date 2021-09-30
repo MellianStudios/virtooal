@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(ProductService $product_service, ProductIndexRequest $request): Response
     {
         return Inertia::render('Product/Index', [
-            'products' => $product_service->getAllFromXmlPaginated($request->count ?? 3),
+            'products_data' => $product_service->getFromXml($request->count ?? 3),
         ]);
     }
 }

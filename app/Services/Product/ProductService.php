@@ -2,7 +2,6 @@
 
 namespace App\Services\Product;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class ProductService
@@ -10,9 +9,9 @@ class ProductService
     /**
      * @param  int  $count
      *
-     * @return Collection
+     * @return array
      */
-    public function getAllFromXmlPaginated(int $count): Collection
+    public function getFromXml(int $count): array
     {
         $files = [
             'products_1.xml',
@@ -23,12 +22,19 @@ class ProductService
         $products = collect();
 
         foreach ($files as $file) {
-            $file_content = simplexml_load_string(Storage::get($file), null, LIBXML_NOCDATA);
-            $file_content = json_decode(json_encode($file_content, JSON_UNESCAPED_UNICODE));
+            if (Storage::disk('xml')->exists($file)) {
+                $file_content = simplexml_load_string(Storage::disk('xml')->get($file), null, LIBXML_NOCDATA);
+                $file_content = json_decode(json_encode($file_content, JSON_UNESCAPED_UNICODE));
 
-            $products = $products->concat($file_content->SHOPITEM);
+                $products = $products->concat($file_content->SHOPITEM);
+            }
         }
 
-        return $products->take($count);
+        $products = $products->sortBy('PRICE');
+
+        return [
+            'products' => $products->values()->take($count),
+            'is_last' => $products->count() <= $count,
+        ];
     }
 }
